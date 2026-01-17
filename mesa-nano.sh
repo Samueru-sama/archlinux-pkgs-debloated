@@ -34,7 +34,8 @@ sed -i \
 	-e 's/intel-rt=enabled/intel-rt=disabled/'          \
 	-e 's/gallium-rusticl=true/gallium-rusticl=false/'  \
 	-e 's/valgrind=enabled/valgrind=disabled/'          \
-	-e "s|vulkan-drivers=.*|vulkan-drivers=|"           \
+	-e 's|vulkan-layers=.*|vulkan-layers=|'             \
+	-e 's|vulkan-drivers=.*|vulkan-drivers=|'           \
 	-e "s|gallium-drivers=.*|gallium-drivers=$gallium|" \
 	-e 's/-D video-codecs=all/-D gallium-va=disabled -D draw-use-llvm=false/' \
 	"$PKGBUILD"
