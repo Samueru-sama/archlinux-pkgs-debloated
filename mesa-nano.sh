@@ -24,6 +24,7 @@ sed -i \
 	-e 's/vulkan-nouveau//'   \
 	-e 's/vulkan-swrast//'    \
 	-e 's/vulkan-virtio//'    \
+	-e 's/vulkan-gfxstream//' \
 	-e 's/vulkan-dzn//'       \
 	-e 's/vulkan-broadcom//'  \
 	-e 's/vulkan-freedreno//' \
