@@ -16,6 +16,7 @@ sed -i \
 	-e '/_pick vk/d'                                    \
 	-e '/_pick opencl/d'                                \
 	-e 's/opencl-mesa//'                                \
+	-e "/vulkan-drivers=/d"                             \
 	-e 's/vulkan-intel//'                               \
 	-e 's/vulkan-radeon//'                              \
 	-e 's/vulkan-nouveau//'                             \
@@ -35,7 +36,6 @@ sed -i \
 	-e 's/gallium-rusticl=true/gallium-rusticl=false/'  \
 	-e 's/valgrind=enabled/valgrind=disabled/'          \
 	-e "s|gallium-drivers=.*|gallium-drivers=$gallium|" \
-	-e "s|vulkan-drivers=.*|vulkan-drivers=virtio|"     \
 	-e 's/-D video-codecs=all/-D gallium-va=disabled -D draw-use-llvm=false/' \
 	"$PKGBUILD"
 
