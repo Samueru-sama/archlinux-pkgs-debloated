@@ -7,47 +7,36 @@ sed -i -e 's|-O2|-Os -fno-strict-aliasing -fno-fast-math -fno-plt|' /etc/makepkg
 get-pkgbuild
 cd "$BUILD_DIR"
 
-common_gallium='softpipe,zink'
+common_gallium='d3d12,softpipe,virgl,zink'
 x64_gallium="$common_gallium"
 arm_gallium="$common_gallium"
 
-common_vulkan='amd,nouveau,virtio,microsoft-experimental,gfxstream'
-x64_vulkan="intel,intel_hasvk,$common_vulkan"
-arm_vulkan="asahi,broadcom,freedreno,panfrost,imagination,$common_vulkan"
+common_vulkan='virtio'
+x64_vulkan="$common_vulkan"
+arm_vulkan="$common_vulkan"
 
-# remove aarch64 drivers from x86_64
-if [ "$ARCH" = 'x86_64' ]; then
-	sed -i \
-		-e '/_pick vkfdreno/d'    \
-		-e '/_pick vkasahi/d'     \
-		-e '/_pick vkbrcom/d'     \
-		-e '/_pick vkpfrost/d'    \
-		-e '/_pick vkpowrvr/d'    \
-		-e 's/vulkan-broadcom//'  \
-		-e 's/vulkan-freedreno//' \
-		-e 's/vulkan-panfrost//'  \
-		-e 's/vulkan-powervr//'   \
-		-e 's/vulkan-asahi//'     \
-		-e "s|gallium-drivers=.*|gallium-drivers=$x64_gallium|" \
-		-e "s|vulkan-drivers=.*|vulkan-drivers=$x64_vulkan|"    \
-		"$PKGBUILD"
-elif [ "$ARCH" = 'aarch64' ]; then
-	sed -i \
-		-e '/_pick vkintel/d' \
-		-e 's/vulkan-intel//'  \
-		-e "s|gallium-drivers=.*|gallium-drivers=$arm_gallium|" \
-		-e "s|vulkan-drivers=.*|vulkan-drivers=$arm_vulkan|"    \
-		"$PKGBUILD"
-fi
+# remove as much as possible and only leave gallium
+sed -i \
+	-e '/_pick vk/d'          \
+	-e '/_pick opencl/d'      \
+	-e 's/vulkan-intel//'     \
+	-e 's/vulkan-radeon//'    \
+	-e 's/vulkan-nouveau//'   \
+	-e 's/vulkan-swrast//'    \
+	-e 's/vulkan-virtio//'    \
+	-e 's/vulkan-broadcom//'  \
+	-e 's/vulkan-freedreno//' \
+	-e 's/vulkan-panfrost//'  \
+	-e 's/vulkan-powervr//'   \
+	-e 's/vulkan-asahi//'     \
+	-e "s|gallium-drivers=.*|gallium-drivers=$x64_gallium|" \
+	-e "s|vulkan-drivers=.*|vulkan-drivers=$x64_vulkan|"    \
+	"$PKGBUILD"
 
-# debloat package, remove software rast, remove ancient drivers, build iwhtout linking to llvm
 sed -i \
 	-e '/llvm-libs/d'      \
 	-e '/sysprof/d'        \
-	-e 's/vulkan-swrast//' \
 	-e 's/opencl-mesa//'   \
-	-e '/_pick vkswrast/d' \
-	-e '/_pick opencl/d'   \
 	-e '/gallium-rusticl-enable-drivers/d' \
 	-e 's/intel-rt=enabled/intel-rt=disabled/'         \
 	-e 's/gallium-rusticl=true/gallium-rusticl=false/' \
@@ -66,20 +55,6 @@ fi
 
 ls -la
 rm -fv ./*-docs-*.pkg.tar.* ./*-debug-*.pkg.tar.*
-mv -v ./mesa-*.pkg.tar."$EXT"           ../mesa-nano-"$ARCH".pkg.tar."$EXT"
-mv -v ./vulkan-radeon-*.pkg.tar."$EXT"  ../vulkan-radeon-nano-"$ARCH".pkg.tar."$EXT"
-mv -v ./vulkan-nouveau-*.pkg.tar."$EXT" ../vulkan-nouveau-nano-"$ARCH".pkg.tar."$EXT"
-mv -v ./vulkan-virtio-*.pkg.tar."$EXT"  ../vulkan-virtio-nano-"$ARCH".pkg.tar."$EXT"
-
-if [ "$ARCH" = 'x86_64' ]; then
-	mv -v ./vulkan-intel-*.pkg.tar."$EXT" ../vulkan-intel-nano-"$ARCH".pkg.tar."$EXT"
-elif [ "$ARCH" = 'aarch64' ]; then
-	mv -v ./vulkan-broadcom-*.pkg.tar."$EXT"  ../vulkan-broadcom-nano-"$ARCH".pkg.tar."$EXT"
-	mv -v ./vulkan-panfrost-*.pkg.tar."$EXT"  ../vulkan-panfrost-nano-"$ARCH".pkg.tar."$EXT"
-	mv -v ./vulkan-freedreno-*.pkg.tar."$EXT" ../vulkan-freedreno-nano-"$ARCH".pkg.tar."$EXT"
-	mv -v ./vulkan-asahi-*.pkg.tar."$EXT"     ../vulkan-asahi-nano-"$ARCH".pkg.tar."$EXT"
-	mv -v ./vulkan-powervr-*.pkg.tar."$EXT"   ../vulkan-powervr-nano-"$ARCH".pkg.tar."$EXT"
-fi
+mv -v ./mesa-*.pkg.tar."$EXT" ../mesa-nano-"$ARCH".pkg.tar."$EXT"
 
 echo "All done!"
-
