@@ -31,6 +31,7 @@ sed -i \
 	-e 's/vulkan-panfrost//'  \
 	-e 's/vulkan-powervr//'   \
 	-e 's/vulkan-asahi//'     \
+	-e 's/vulkan-mesa-implicit-layers//' \
 	-e "s|gallium-drivers=.*|gallium-drivers=$x64_gallium|" \
 	-e "s|vulkan-drivers=.*|vulkan-drivers=$x64_vulkan|"    \
 	"$PKGBUILD"
