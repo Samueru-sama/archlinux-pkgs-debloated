@@ -7,7 +7,7 @@ sed -i -e 's|-O2|-Os -fno-strict-aliasing -fno-fast-math -fno-plt|' /etc/makepkg
 get-pkgbuild
 cd "$BUILD_DIR"
 
-common_gallium='d3d12,softpipe,virgl,zink'
+common_gallium='softpipe,zink'
 x64_gallium="$common_gallium"
 arm_gallium="$common_gallium"
 
