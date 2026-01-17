@@ -13,10 +13,10 @@ gallium='d3d12,softpipe,virgl,zink'
 sed -i \
 	-e '/llvm-libs/d'                                   \
 	-e '/sysprof/d'                                     \
+	-e "/vulkan-drivers=/d"                             \
 	-e '/_pick vk/d'                                    \
 	-e '/_pick opencl/d'                                \
 	-e 's/opencl-mesa//'                                \
-	-e "/vulkan-drivers=/d"                             \
 	-e 's/vulkan-intel//'                               \
 	-e 's/vulkan-radeon//'                              \
 	-e 's/vulkan-nouveau//'                             \
