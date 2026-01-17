@@ -52,7 +52,7 @@ sed -i \
 	-e 's/intel-rt=enabled/intel-rt=disabled/'         \
 	-e 's/gallium-rusticl=true/gallium-rusticl=false/' \
 	-e 's/valgrind=enabled/valgrind=disabled/'         \
-	-e 's/-D video-codecs=all/-D video-codecs=all -D amd-use-llvm=false -D draw-use-llvm=false/' \
+	-e 's/-D video-codecs=all/-D gallium-va=disabled -D amd-use-llvm=false -D draw-use-llvm=false/' \
 	"$PKGBUILD"
 
 cat "$PKGBUILD"
