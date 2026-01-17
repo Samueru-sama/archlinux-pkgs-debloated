@@ -13,7 +13,6 @@ gallium='d3d12,softpipe,virgl,zink'
 sed -i \
 	-e '/llvm-libs/d'                                   \
 	-e '/sysprof/d'                                     \
-	-e "/vulkan-drivers=/d"                             \
 	-e '/_pick vk/d'                                    \
 	-e '/_pick opencl/d'                                \
 	-e 's/opencl-mesa//'                                \
@@ -35,6 +34,7 @@ sed -i \
 	-e 's/intel-rt=enabled/intel-rt=disabled/'          \
 	-e 's/gallium-rusticl=true/gallium-rusticl=false/'  \
 	-e 's/valgrind=enabled/valgrind=disabled/'          \
+	-e "s|vulkan-drivers=.*|vulkan-drivers=|"           \
 	-e "s|gallium-drivers=.*|gallium-drivers=$gallium|" \
 	-e 's/-D video-codecs=all/-D gallium-va=disabled -D draw-use-llvm=false/' \
 	"$PKGBUILD"
