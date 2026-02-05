@@ -42,6 +42,7 @@ fi
 
 # debloat package, remove software rast, remove ancient drivers, build iwhtout linking to llvm
 sed -i \
+	-e 's/!lto/lto/'       \
 	-e '/llvm-libs/d'      \
 	-e '/sysprof/d'        \
 	-e 's/vulkan-swrast//' \
