@@ -11,7 +11,7 @@ pacman -S --noconfirm \
 	sndio
 
 # revert the mandatory linking to many dependencies
-sed -i -e 's|SDL_DEPS_SHARED=OFF|-D SDL_DEPS_SHARED=ON|' "$PKGBUILD"
+sed -i -e 's|SDL_DEPS_SHARED=OFF|SDL_DEPS_SHARED=ON|' "$PKGBUILD"
 
 # and prevent pacman from installing them always
 sed -i \
