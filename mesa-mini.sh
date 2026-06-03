@@ -53,7 +53,7 @@ sed -i \
 # Patch AMDGPU DRM version check for compatibility with older kernels
 sed -i '/^  cd mesa-\$_pkgver$/a\
 	echo "Patching amdgpu DRM version check..."\
-	patch -p1 < ../mesa-lower-amd-kernel-version.patch' "$PKGBUILD"
+	patch -Np1 < "$startdir/mesa-lower-amd-kernel-version.patch"' "$PKGBUILD"
 
 cat "$PKGBUILD"
 
