@@ -5,6 +5,7 @@ set -e
 sed -i -e 's|-O2|-Os|' /etc/makepkg.conf
 
 get-pkgbuild
+cp -v ./aux/mesa-lower-amd-kernel-version.patch "$BUILD_DIR"
 cd "$BUILD_DIR"
 
 common_gallium='d3d12,nouveau,radeonsi,softpipe,virgl,zink'
@@ -54,7 +55,7 @@ sed -i \
 # Patch AMDGPU DRM version check for compatibility with older kernels
 sed -i '/^  cd mesa-\$_pkgver$/a\
 	echo "Patching amdgpu DRM version check..."\
-	find . -name "ac_gpu_info.c" -print -exec sed -i "s/info->drm_minor < 54/info->drm_minor < 0/" {} \\;' "$PKGBUILD"
+	patch -p1 < ../mesa-lower-amd-kernel-version.patch' "$PKGBUILD"
 
 cat "$PKGBUILD"
 
