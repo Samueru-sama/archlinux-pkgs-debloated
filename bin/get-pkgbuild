@@ -48,5 +48,11 @@ if ! grep -q "arch=.*$PKGARCH" "$PKGBUILD"; then
 	sed -i -e "s|x86_64|$PKGARCH|" "$PKGBUILD"
 fi
 
+# opus aborts at configure time on the ported arches, its meson.build has
+# no intrinsics or rtcd support for them
+if [ "$PACKAGE" = 'opus' ] && [ "$PKGARCH" != 'x86_64' ] && [ "$PKGARCH" != 'aarch64' ]; then
+	sed -i 		-e 's|-D osce=enabled|-D osce=enabled -D intrinsics=disabled -D rtcd=disabled|' 		"$PKGBUILD"
+fi
+
 # always build without debug info
 sed -i -e 's|-g1|-g0|' "$PKGBUILD"
