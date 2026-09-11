@@ -72,7 +72,7 @@ while :; do
 	fi
 done
 
-ccache -s -v || true # ccache is not packaged on every port
+ccache -s -v
 
 mkdir ./dist
 sha256sum ./*.pkg.tar.*

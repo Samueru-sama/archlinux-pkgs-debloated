@@ -28,7 +28,7 @@ MAKEFLAGS="-j$(nproc)"
 DEBUG_CFLAGS="-g0"
 DEBUG_CXXFLAGS="$DEBUG_CFLAGS"
 
-BUILDENV=(!distcc color !ccache check !sign)
+BUILDENV=(!distcc color ccache check !sign)
 OPTIONS=(strip docs !libtool !staticlibs emptydirs zipman purge !debug !lto)
 
 INTEGRITY_CHECK=(sha256)
