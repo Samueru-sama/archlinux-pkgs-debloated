@@ -114,6 +114,11 @@ jobs:
       matrix:
         script: [gtk3-mini, icu-mini, libxml2-mini]
         arch: [riscv64, loongarch64, ppc64le, ppc64]
+        include:
+          - { arch: riscv64, platform: linux/riscv64 }
+          - { arch: loongarch64, platform: linux/loong64 }
+          - { arch: ppc64le, platform: linux/ppc64le }
+          - { arch: ppc64, platform: linux/ppc64 }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
