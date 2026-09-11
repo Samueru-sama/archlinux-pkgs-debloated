@@ -13,8 +13,6 @@ if [ -n "${PKGBUILD_REPO:-}" ]; then
 	git clone --depth 1 "$PKGBUILD_REPO" "$BUILD_DIR"
 elif [ -n "${AUR_PACKAGE:-}" ]; then
 	git clone --depth 1 "$AUR_REPO"/"$AUR_PACKAGE".git "$BUILD_DIR"
-elif [ "$ARCH" = 'x86_64' ]; then
-	git clone --depth 1 "$ARCH_REPO"/"$PACKAGE" "$BUILD_DIR"
 elif [ "$ARCH" = 'aarch64' ]; then
 	git clone --depth 1 "$ALARM_REPO" "$ALARM_DIR"
 	# if ALARM does not have the package, then use the archlinux package directly
@@ -28,6 +26,10 @@ elif [ "$ARCH" = 'aarch64' ]; then
 		git clone --depth 1 "$ARCH_REPO"/"$PACKAGE" "$BUILD_DIR"
 	fi
 	rm -rf "$ALARM_DIR"
+else
+	# the port monorepos do not carry every package, the archlinux PKGBUILD
+	# works for x86_64 and most ported arches after the arch sed below
+	git clone --depth 1 "$ARCH_REPO"/"$PACKAGE" "$BUILD_DIR"
 fi
 
 echo "----------------------------------------"

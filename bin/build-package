@@ -18,8 +18,11 @@ _cleanup() { rm -rf "$BUILD_DIR"; }
 trap _cleanup INT TERM EXIT
 
 case "$ARCH" in
-	'x86_64')  export EXT=zst;;
-	'aarch64') export EXT=xz ;;
+	'x86_64')                             export EXT=zst;;
+	'riscv64')                            export EXT=zst;;
+	'loongarch64')                        export EXT=zst;;
+	'ppc64le' | 'ppc64')                  export EXT=zst;;
+	'aarch64')                            export EXT=xz ;;
 	*)
 		>&2 echo "Unsupported Arch: '$ARCH'"
 		exit 1

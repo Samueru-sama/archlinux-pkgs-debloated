@@ -99,10 +99,58 @@ jobs:
           name: ${{ format('{0}-{1}', matrix.script, matrix.arch) }}
           path: "dist"
 
+  # foreign arches run through qemu user emulation, only the packages that
+  # are confirmed to build are part of the matrix for now
+  build-emulated:
+    name: "Build: ${{ matrix.script }} (${{ matrix.arch }})"
+    permissions:
+      actions: read
+      security-events: write
+      contents: write
+    runs-on: ubuntu-24.04
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        script: [gtk3-mini, icu-mini, libxml2-mini]
+        arch: [riscv64, loongarch64, ppc64le, ppc64]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: set up qemu
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends qemu-user-static
+
+      - name: build package
+        env:
+          FORCE_BUILD: ${{ github.event.inputs.FORCE_BUILD }}
+          ONE_PACKAGE: ${{ github.event.inputs.ONE_PACKAGE }}
+          CCACHE_DIR: ${{ github.workspace }}/.ccache
+          CCACHE_COMPILERCHECK: content
+          CCACHE_SLOPPINESS: time_macros,file_macro,include_file_mtime,include_file_ctime
+        run: |
+          docker run --rm --platform ${{ matrix.platform }} \
+            --cap-add=SYS_ADMIN --security-opt seccomp=unconfined \
+            -e CCACHE_DIR=/repo/.ccache -e CCACHE_COMPILERCHECK=content \
+            -e CCACHE_SLOPPINESS='time_macros,file_macro,include_file_mtime,include_file_ctime' \
+            -e FORCE_BUILD="$FORCE_BUILD" -e ONE_PACKAGE="$ONE_PACKAGE" \
+            -v "$PWD":/repo -w /repo \
+            ghcr.io/pkgforge-dev/archlinux:latest \
+            /bin/sh -euc '/bin/sh ./bin/prepare-build && /bin/sh ./bin/build-package ${{ matrix.script }}.sh'
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ format('{0}-{1}', matrix.script, matrix.arch) }}
+          path: "dist"
+
   release:
     name: "release"
     if: ${{ github.ref_name == 'main' }}
-    needs: [build]
+    needs: [build, build-emulated]
     permissions:
       actions: read
       security-events: write
