@@ -36,9 +36,14 @@ echo "----------------------------------------"
 ls -la "$BUILD_DIR"
 echo "----------------------------------------"
 
-# change arch for aarch64 support, even ArchlinuxARM PKGBUILDs need this...
-if ! grep -q "arch=.*$ARCH" "$PKGBUILD"; then
-	sed -i -e "s|x86_64|$ARCH|" "$PKGBUILD"
+# change arch for foreign arch support, even port PKGBUILDs need this...
+# note the port arch name can differ from uname -m (loongarch64 vs loong64)
+case "$ARCH" in
+	'loongarch64') PKGARCH=loong64 ;;
+	*)             PKGARCH=$ARCH ;;
+esac
+if ! grep -q "arch=.*$PKGARCH" "$PKGBUILD"; then
+	sed -i -e "s|x86_64|$PKGARCH|" "$PKGBUILD"
 fi
 
 # always build without debug info

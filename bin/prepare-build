@@ -6,15 +6,18 @@ pacman-key --init
 pacman -Syy --noconfirm archlinux-keyring
 pacman -Syu --noconfirm \
 	base-devel \
-	ccache     \
-	clang      \
-	cmake      \
 	curl       \
 	git        \
-	mold       \
-	ninja      \
-	sccache    \
 	wget
+
+# build accelerators, not every port packages them
+pacman -S --needed --noconfirm \
+	ccache \
+	clang  \
+	cmake  \
+	mold   \
+	ninja  \
+	sccache || true
 
 echo "------------------------------------------------------------"
 echo "Settings up build options..."
