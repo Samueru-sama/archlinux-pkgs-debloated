@@ -112,7 +112,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        script: [gtk3-mini, icu-mini, libxml2-mini]
+        script: [gtk3-mini, icu-mini, libxml2-mini, opus-mini]
         arch: [riscv64, loongarch64, ppc64le, ppc64]
         include:
           - { arch: riscv64, platform: linux/riscv64 }
