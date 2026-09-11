@@ -40,6 +40,8 @@ echo "----------------------------------------"
 # note the port arch name can differ from uname -m (loongarch64 vs loong64)
 case "$ARCH" in
 	'loongarch64') PKGARCH=loong64 ;;
+	'ppc64le')     PKGARCH=powerpc64le ;;
+	'ppc64')       PKGARCH=powerpc64 ;;
 	*)             PKGARCH=$ARCH ;;
 esac
 if ! grep -q "arch=.*$PKGARCH" "$PKGBUILD"; then
