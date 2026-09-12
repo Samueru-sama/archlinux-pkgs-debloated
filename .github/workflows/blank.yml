@@ -44,7 +44,6 @@ jobs:
           - opus-mini
           - mesa-mini
           - mesa-nano
-          - mesa-zink-mini
           - mangohud-mini
           - icu-mini
           - kiconthemes-mini
