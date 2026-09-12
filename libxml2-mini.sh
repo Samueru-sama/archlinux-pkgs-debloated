@@ -25,11 +25,4 @@ fi
 ls -la
 rm -fv ./*-docs-*.pkg.tar.* ./*-debug-*.pkg.tar.*
 mv -v ./"$PACKAGE"-*.pkg.tar."$EXT" ../"$PACKAGE"-mini-"$ARCH".pkg.tar."$EXT"
-cd ..
-# keep the older name only for the arches that had existing CIs
-case "$ARCH" in
-	'x86_64'|'aarch64')
-		cp -v ./libxml2-mini-"$ARCH".pkg.tar."$EXT" ./libxml2-iculess-"$ARCH".pkg.tar."$EXT"
-		;;
-esac
 echo "All done!"
