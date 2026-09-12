@@ -34,22 +34,6 @@ elif [ "$ARCH" = 'aarch64' ]; then
 		-e "s|gallium-drivers=.*|gallium-drivers=$arm_gallium|" \
 		-e "s|vulkan-drivers=.*|vulkan-drivers=$arm_vulkan|"    \
 		"$PKGBUILD"
-elif [ "$ARCH" = 'riscv64' ] || [ "$ARCH" = 'loongarch64' ] || [ "$ARCH" = 'ppc64le' ] || [ "$ARCH" = 'ppc64' ]; then
-	# the ported arches get no vulkan drivers
-	delete-func vulkan-swrast vulkan-kosmickrisp vulkan-dzn vulkan-freedreno vulkan-asahi vulkan-broadcom vulkan-panfrost vulkan-powervr vulkan-virtio vulkan-radeon vulkan-nouveau vulkan-intel opencl-mesa
-	case "$ARCH" in
-		'riscv64')     GALLIUM='softpipe,svga,radeonsi' ;;
-		'loongarch64') GALLIUM='softpipe,svga,radeonsi' ;;
-		'ppc64le')     GALLIUM='softpipe,svga,radeonsi,r600' ;;
-		'ppc64')       GALLIUM='softpipe,svga,radeonsi,r600,r300' ;;
-	esac
-	sed -i \
-		-e '/_pick vk/d'        \
-		-e '/_pick opencl/d'    \
-		-e '/_pick vkkosmic/d'  \
-		-e 's|vulkan-drivers=.*|vulkan-drivers=|' \
-		-e "s|gallium-drivers=.*|gallium-drivers=$GALLIUM|" \
-		"$PKGBUILD"
 fi
 
 # debloat package, remove software rast, remove ancient drivers, build without linking to llvm
@@ -109,23 +93,20 @@ fi
 
 ls -la
 rm -fv ./*-docs-*.pkg.tar.* ./*-debug-*.pkg.tar.*
-mv -v ./mesa-*.pkg.tar."$EXT" ../mesa-nano-"$ARCH".pkg.tar."$EXT"
+mv -v ./mesa-*.pkg.tar."$EXT"           ../mesa-nano-"$ARCH".pkg.tar."$EXT"
+mv -v ./vulkan-radeon-*.pkg.tar."$EXT"  ../vulkan-radeon-nano-"$ARCH".pkg.tar."$EXT"
+mv -v ./vulkan-nouveau-*.pkg.tar."$EXT" ../vulkan-nouveau-nano-"$ARCH".pkg.tar."$EXT"
+mv -v ./vulkan-virtio-*.pkg.tar."$EXT"  ../vulkan-virtio-nano-"$ARCH".pkg.tar."$EXT"
 
-case "$ARCH" in
-	'x86_64')
-		mv -v ./vulkan-intel-*.pkg.tar."$EXT"   ../vulkan-intel-nano-"$ARCH".pkg.tar."$EXT"
-		mv -v ./vulkan-radeon-*.pkg.tar."$EXT"  ../vulkan-radeon-nano-"$ARCH".pkg.tar."$EXT"
-		mv -v ./vulkan-nouveau-*.pkg.tar."$EXT" ../vulkan-nouveau-nano-"$ARCH".pkg.tar."$EXT"
-		mv -v ./vulkan-virtio-*.pkg.tar."$EXT"  ../vulkan-virtio-nano-"$ARCH".pkg.tar."$EXT"
-		;;
-	'aarch64')
-		mv -v ./vulkan-broadcom-*.pkg.tar."$EXT"  ../vulkan-broadcom-nano-"$ARCH".pkg.tar."$EXT"
-		mv -v ./vulkan-panfrost-*.pkg.tar."$EXT"  ../vulkan-panfrost-nano-"$ARCH".pkg.tar."$EXT"
-		mv -v ./vulkan-freedreno-*.pkg.tar."$EXT" ../vulkan-freedreno-nano-"$ARCH".pkg.tar."$EXT"
-		mv -v ./vulkan-asahi-*.pkg.tar."$EXT"     ../vulkan-asahi-nano-"$ARCH".pkg.tar."$EXT"
-		mv -v ./vulkan-powervr-*.pkg.tar."$EXT"   ../vulkan-powervr-nano-"$ARCH".pkg.tar."$EXT"
-		;;
-esac
+if [ "$ARCH" = 'x86_64' ]; then
+	mv -v ./vulkan-intel-*.pkg.tar."$EXT" ../vulkan-intel-nano-"$ARCH".pkg.tar."$EXT"
+elif [ "$ARCH" = 'aarch64' ]; then
+	mv -v ./vulkan-broadcom-*.pkg.tar."$EXT"  ../vulkan-broadcom-nano-"$ARCH".pkg.tar."$EXT"
+	mv -v ./vulkan-panfrost-*.pkg.tar."$EXT"  ../vulkan-panfrost-nano-"$ARCH".pkg.tar."$EXT"
+	mv -v ./vulkan-freedreno-*.pkg.tar."$EXT" ../vulkan-freedreno-nano-"$ARCH".pkg.tar."$EXT"
+	mv -v ./vulkan-asahi-*.pkg.tar."$EXT"     ../vulkan-asahi-nano-"$ARCH".pkg.tar."$EXT"
+	mv -v ./vulkan-powervr-*.pkg.tar."$EXT"   ../vulkan-powervr-nano-"$ARCH".pkg.tar."$EXT"
+fi
 
 echo "All done!"
 
