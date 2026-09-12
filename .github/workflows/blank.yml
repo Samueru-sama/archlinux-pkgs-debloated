@@ -19,6 +19,9 @@ on:
 jobs:
   build:
     name: "Build: ${{ matrix.script }} (${{ matrix.arch }})"
+    # with ONE_PACKAGE set, jobs for other packages are skipped entirely
+    # (prepare-build is too slow to run just to abort)
+    if: ${{ github.event.inputs.ONE_PACKAGE == '' || contains(matrix.script, github.event.inputs.ONE_PACKAGE) }}
     permissions:
       actions: read
       security-events: write
@@ -102,6 +105,7 @@ jobs:
   # are confirmed to build are part of the matrix for now
   build-emulated:
     name: "Build: ${{ matrix.script }} (${{ matrix.arch }})"
+    if: ${{ github.event.inputs.ONE_PACKAGE == '' || contains(matrix.script, github.event.inputs.ONE_PACKAGE) }}
     permissions:
       actions: read
       security-events: write
