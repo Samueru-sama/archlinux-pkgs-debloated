@@ -106,7 +106,6 @@ jobs:
   # are confirmed to build are part of the matrix for now
   build-emulated:
     name: "Build: ${{ matrix.script }} (${{ matrix.arch }})"
-    if: ${{ github.event.inputs.ONE_PACKAGE == '' || contains(matrix.script, github.event.inputs.ONE_PACKAGE) }}
     permissions:
       actions: read
       security-events: write
