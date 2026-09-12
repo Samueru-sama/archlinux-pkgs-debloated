@@ -13,6 +13,8 @@ if [ -n "${PKGBUILD_REPO:-}" ]; then
 	git clone --depth 1 "$PKGBUILD_REPO" "$BUILD_DIR"
 elif [ -n "${AUR_PACKAGE:-}" ]; then
 	git clone --depth 1 "$AUR_REPO"/"$AUR_PACKAGE".git "$BUILD_DIR"
+elif [ "$ARCH" = 'x86_64' ]; then
+	git clone --depth 1 "$ARCH_REPO"/"$PACKAGE" "$BUILD_DIR"
 elif [ "$ARCH" = 'aarch64' ]; then
 	git clone --depth 1 "$ALARM_REPO" "$ALARM_DIR"
 	# if ALARM does not have the package, then use the archlinux package directly
