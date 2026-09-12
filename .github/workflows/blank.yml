@@ -116,12 +116,9 @@ jobs:
       fail-fast: false
       matrix:
         script:
-          - gtk3-mini
           - icu-mini
           - libxml2-mini
           - opus-mini
-          - mesa-mini
-          - mesa-nano
         arch: [riscv64, loongarch64, ppc64le, ppc64]
         include:
           - { arch: riscv64, platform: linux/riscv64 }
