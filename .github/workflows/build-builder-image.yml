@@ -58,12 +58,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # ghcr requires lowercase, but repository_owner may contain capitals
+      - name: lowercase owner
+        id: lc
+        run: echo "owner=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+
       - name: build and push
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: .
           platforms: ${{ matrix.platform }}
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/archlinux-builder:${{ matrix.arch }}
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/archlinux-builder:cache-${{ matrix.arch }}
-          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/archlinux-builder:cache-${{ matrix.arch }},mode=max
+          tags: ghcr.io/${{ steps.lc.outputs.owner }}/archlinux-builder:${{ matrix.arch }}
+          cache-from: type=registry,ref=ghcr.io/${{ steps.lc.outputs.owner }}/archlinux-builder:cache-${{ matrix.arch }}
+          cache-to: type=registry,ref=ghcr.io/${{ steps.lc.outputs.owner }}/archlinux-builder:cache-${{ matrix.arch }},mode=max
